@@ -3,11 +3,8 @@
 
 using System;
 using Microsoft.AspNet.Authentication.Cookies;
-using Microsoft.AspNet.DataProtection;
 using Microsoft.Framework.Internal;
-using Microsoft.Framework.Logging;
 using Microsoft.Framework.OptionsModel;
-using Microsoft.Framework.WebEncoders;
 
 namespace Microsoft.AspNet.Builder
 {
@@ -44,28 +41,5 @@ namespace Microsoft.AspNet.Builder
             return app.UseMiddleware<CookieAuthenticationMiddleware>(options,
                 new ConfigureOptions<CookieAuthenticationOptions>(o => { }));
         }
-
-        public static IApplicationBuilder UseCookieAuthentication(
-            [NotNull] this IApplicationBuilder app,
-            [NotNull] IDataProtectionProvider dataProtectionProvider,
-            Action<CookieAuthenticationOptions> configureOptions)
-        {
-            return app.UseMiddleware<ShareableCookieAuthenticationMiddleware>(
-                dataProtectionProvider,
-                new ConfigureOptions<CookieAuthenticationOptions>(configureOptions ?? (o => { }));
-        }
-
-        private sealed class ShareableCookieAuthenticationMiddleware : CookieAuthenticationMiddleware
-        {
-            public ShareableCookieAuthenticationMiddleware(
-                [NotNull] RequestDelegate next,
-                [NotNull] ILoggerFactory loggerFactory,
-                [NotNull] IOptions<CookieAuthenticationOptions> options,
-                [NotNull] IDataProtectionProvider dataProtectionProvider,
-                [NotNull] IUrlEncoder urlEncoder,
-                ConfigureOptions<CookieAuthenticationOptions> configureOptions)
-                : base(next, dataProtectionProvider, loggerFactory, urlEncoder, options, configureOptions)
-            {
-            }
-        }
     }
+}
